@@ -4,8 +4,8 @@
 package com.duoduo.schema;
 
 
-import com.duoduo.schema.tables.AmountTest;
 import com.duoduo.schema.tables.Configuration;
+import com.duoduo.schema.tables.EhOrder;
 import com.duoduo.schema.tables.Order;
 import com.duoduo.schema.tables.ReceiveMessage;
 
@@ -26,14 +26,14 @@ import javax.annotation.Generated;
 public class Tables {
 
     /**
-     * The table <code>duoduo.amount_test</code>.
-     */
-    public static final AmountTest AMOUNT_TEST = com.duoduo.schema.tables.AmountTest.AMOUNT_TEST;
-
-    /**
      * The table <code>duoduo.configuration</code>.
      */
     public static final Configuration CONFIGURATION = com.duoduo.schema.tables.Configuration.CONFIGURATION;
+
+    /**
+     * The table <code>duoduo.eh_order</code>.
+     */
+    public static final EhOrder EH_ORDER = com.duoduo.schema.tables.EhOrder.EH_ORDER;
 
     /**
      * The table <code>duoduo.order</code>.

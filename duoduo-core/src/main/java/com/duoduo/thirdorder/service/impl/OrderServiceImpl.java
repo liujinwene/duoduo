@@ -2,9 +2,11 @@ package com.duoduo.thirdorder.service.impl;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,5 +148,46 @@ public class OrderServiceImpl implements OrderService {
 			ThirdOrderResp orderResp = GsonUtil.fromJson(orderRecord.getOrderJson(), ThirdOrderResp.class);
 			updateOrder(orderResp.getOrder(), String.format(MESSAGE_FORMAT, receiveMessage.getContent()));
 		}
+	}
+	
+	@Override
+	public ListThirdOrderResp listOrder2() {
+		String __token = getToken();
+		String final_status = "0";//0-全部
+		String start_time = getStartTime();
+		String page = getPage();
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("__token", __token);
+		params.put("final_status", final_status);
+		params.put("start_time", start_time);
+		params.put("page", page);
+		params.put("pageSize", "20");
+
+		String responseStr = HttpUtil.get(listOrderUrl, getHeaderInfo(), params);
+		LOGGER.info("responseStr=" + responseStr);
+		
+		ListThirdOrderResp orderResult = GsonUtil.fromJson(responseStr, ListThirdOrderResp.class);
+		if(orderResult.isSuccess()) {
+			if(orderResult.getData() != null && !orderResult.getData().isEmpty()) {
+				List<ThirdOrderResp> orders = orderResult.getData();
+				for(ThirdOrderResp order : orders) {
+					createOrUpdateOrder(order);
+				}
+				//更新查询订单：开始时间、页码
+				configurationService.update(ConfigName.EXPIRED_TIME, orders.get((orders.size()-1)).getOrder().getCreate_time());
+				configurationService.update(ConfigName.PAGE, (Integer.valueOf(page)+1)+"");
+			}
+		}
+		
+		return orderResult;
+	}
+
+	private void createOrUpdateOrder(ThirdOrderResp order) {
+		
+	}
+
+	private String getPage() {
+		return configurationService.getValue(ConfigName.PAGE);
 	}
 }

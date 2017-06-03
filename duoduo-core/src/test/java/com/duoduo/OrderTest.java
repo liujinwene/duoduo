@@ -1,7 +1,6 @@
 package com.duoduo;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.jooq.DSLContext;
-import org.jooq.util.derby.sys.Sys;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,8 +19,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import com.duoduo.base.core.CoreServerApp;
 import com.duoduo.configuration.service.ConfigurationService;
 import com.duoduo.order.dao.OrderDao;
-import com.duoduo.schema.Tables;
-import com.duoduo.schema.tables.records.AmountTestRecord;
 import com.duoduo.schema.tables.records.OrderRecord;
 import com.duoduo.thirdorder.resp.ListThirdOrderResp;
 import com.duoduo.thirdorder.resp.SubThirdOrder;
@@ -42,14 +38,6 @@ public class OrderTest {
 	private OrderDao orderDao;
 	@Autowired
 	private ConfigurationService configService;
-	
-	@Test
-	public void test() {
-		AmountTestRecord record = dsl.selectFrom(Tables.AMOUNT_TEST).fetchOne();
-		System.out.println(record.getAmount());
-		BigDecimal value = new BigDecimal("0.01");
-		System.out.println(value.equals(record.getAmount()));
-	}
 	
 	@Test
 	@Ignore

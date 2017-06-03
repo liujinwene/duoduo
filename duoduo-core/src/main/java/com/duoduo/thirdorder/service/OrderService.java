@@ -13,4 +13,6 @@ public interface OrderService {
 
 	void updateOrder(ReceiveMessageResp receiveMessage);
 
+	ListThirdOrderResp listOrder2();
+
 }
