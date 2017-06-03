@@ -4,9 +4,10 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.lang.StringUtils;
-import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import com.duoduo.configuration.constant.ConfigName;
 import com.duoduo.configuration.service.ConfigurationService;
 import com.duoduo.message.resp.ReceiveMessageResp;
 import com.duoduo.order.dao.OrderDao;
-import com.duoduo.receivemessage.service.ReceiveMessageService;
 import com.duoduo.schema.tables.records.OrderRecord;
 import com.duoduo.thirdorder.resp.BaseThirdOrderResp;
 import com.duoduo.thirdorder.resp.ListThirdOrderResp;
@@ -28,6 +28,7 @@ import com.duoduo.util.HttpUtil;
 
 @Service
 public class OrderServiceImpl implements OrderService {
+	private static Lock CREATE_ORDER_LOCK = new ReentrantLock();
 	private static Logger LOGGER = LoggerFactory.getLogger(OrderServiceImpl.class);
 	
 	private static final String MESSAGE_FORMAT = "【短信回复:%s】";
@@ -184,7 +185,13 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	private void createOrUpdateOrder(ThirdOrderResp order) {
-		
+		try {
+			CREATE_ORDER_LOCK.lock();
+		} catch(Exception e) {
+			
+		} finally {
+			CREATE_ORDER_LOCK.unlock();
+		}
 	}
 
 	private String getPage() {
